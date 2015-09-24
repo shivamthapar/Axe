@@ -1,0 +1,13 @@
+{
+	"wptBaseURL" : "URL OF WEBPAGETEST INSTANCE",
+	"AxeBaseURL" : "URL OF ROOT AXE INSTANCE",
+	"wptAPIKey" : "API KEY",
+	"emailAddresses" : [
+		"someemail@dummy.com"
+	],
+	"maxPageSize" : 700,
+	"quickStatsRoutes": {
+	  "Home" : "http://yoursite.com/",
+	  "Search" : "http://yoursite.com/search/*"
+	}
+}

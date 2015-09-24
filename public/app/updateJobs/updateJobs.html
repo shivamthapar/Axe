@@ -1,0 +1,49 @@
+<style type="text/css">
+  .body{
+    padding: 4%;
+    text-align: center;
+  }
+</style>
+<div class="body" ng-controller="updateJobsCtrl" ng-init="clearJobs()">
+  <div class="row">
+    <div class="form-group col-md-12">
+      <div class="col-md-12">
+        <p> These are the tests we run daily. Add or remove URLs. Limit 100 </p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group" >
+      <div class="col-md-6" id="input-sitename">
+        <input name="sitename" id="sitename" type="url" class="form-control" id="" ng-model="job" placeholder="http://m.samsclub.com">
+      </div>
+      <div class="col-md-2">
+        <button style="width:100%" id="addbutton" class="btn btn-default" ng-click="addToJobs(job)" ng-disable="inputForm.$error.job">add</button>
+      </div>
+      <div class="col-md-2">
+        <button style="width:100%" type="button" class="btn btn-danger" ng-click="clearJobs()">Clear all!</button>
+      </div>
+      <div class="col-md-2">
+        <span style="width:100%" type="button" class="btn btn-info  btn-file" ngf-select ngf-change="bulkload($files)" ngf-multiple="multiple">Bulk Load</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="websiteList" ng-init="fetchSitesToTest()">
+      <h2 ng-show="isFetchingData">Loading...</h2>
+      <table class="table table-bordered">
+        <tbody ng-repeat="job in jobs track by $index">
+          <tr>
+            <td> {{$index + 1}}. </td>
+            <td>{{job}}
+              <button type="button" ng-click="removeFromJobs($index)" style="float:right;"class="btn btn-default"><span style="float: right; color: red;" class="glyphicon glyphicon-remove"></span></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <center><button id="addbutton" class="btn btn-info" ng-click="changeDailies()">Update Test URLs</button><span class= "glyphicon glyphicon-ok" style="color: green; font-size:20px; margin-left:8px;" ng-show="urlsSet"></span></center>
+  </div>
+</div>

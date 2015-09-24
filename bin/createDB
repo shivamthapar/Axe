@@ -1,0 +1,57 @@
+#!/usr/bin/env node
+
+var pg = require('pg');
+var finishedTaskCount = 0;
+
+var createSitesTable = function(callback){
+
+  var sitesQuery = "CREATE TABLE sites (id SERIAL, run boolean, site_address text not null, PRIMARY KEY(id))";
+
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    client.query(sitesQuery)
+      .on('end', function(response){
+        callback({success: true, response: response});
+      })
+      .on('error', function(error){
+        callback({success: false, response: error});
+      });
+  });
+}
+
+var createTestsTable = function(callback){
+
+  var testsQuery = "CREATE TABLE tests (id integer not null references sites(id), fv_load_time bigint, sv_load_time bigint, date timestamp without time zone, conn_type integer, fv_start_render bigint, fv_speed_index bigint, browser_type integer, sv_start_render bigint, sv_speed_index bigint, results_url text, test_id SERIAL, tested boolean, fv_bytes_in integer, sv_bytes_in integer)";
+
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    client.query(testsQuery)
+      .on('end', function(response){
+        callback({success: true, response: response});
+      })
+      .on('error', function(error){
+        callback({success: false, response: error});
+      });
+  });
+}
+
+createSitesTable(function(result){
+  if(result.success){
+    console.log("TABLE sites CREATED");
+    createTestsTable(function(testsResult){
+      if(testsResult.success){
+        console.log("TABLE tests CREATED");
+        process.exit(0);
+      }
+      else{
+        console.log("TABLE tests COULD NOT BE CREATED");
+        console.log("DB ERROR: ", testsResult.response);
+        process.exit(1);
+      }
+    });
+  }
+  else{
+    console.log("TABLE sites COULD NOT BE CREATED");
+    console.log("DB ERROR: ", result.response);
+    process.exit(1);
+  }
+});
+

@@ -1,0 +1,36 @@
+.websiteList {
+	height: 500px;
+	overflow: scroll;
+	background-color: #f7f7f7;
+}
+
+.form-group {
+	height: 30px;
+}
+
+#sitename, #addbutton {
+	border-radius: 0px;
+}
+
+#input-sitename {
+	padding-left: 0px;
+}
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}

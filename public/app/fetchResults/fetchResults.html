@@ -1,0 +1,76 @@
+<head>
+  <style type="text/css">
+    .body{
+      padding: 4%;
+      text-align: center;
+    }
+    .formLabel{
+      font-weight: bold;
+    }
+  </style>
+</head>
+<div  class="body" ng-controller="fetchResultsCtrl">
+  <div class="row">
+    <div class="col-md-4">
+      <span class="formLabel">Dates</span>
+    </div>
+    <div class="col-md-4">
+      <span class="formLabel">Browser</span>
+    </div>
+    <div class="col-md-4">
+      <span class="formLabel">Connection</span>
+    </div>
+  </div>
+  <div class="row" style="margin-bottom:10px;">
+    <div class="col-md-4" ng-init="getTestsStartingAndEndingDates()">
+	     <input ng-if="startDate != null" date-range-picker class="form-control date-picker" type="text" ng-model="model.datePicker" min="startDate" max="endDate"/>
+    </div>
+    <div class="col-md-4">
+      <select class="form-control" ng-model="model.browser">
+        <option value="chrome">Chrome - Desktop</option>
+        <option value="ios">iOS - Chrome with Mobile Emulation</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <select class="form-control" ng-model="model.connection">
+        <option value="3G">3G</option>
+        <option value="cable">Cable</option>
+        <option value="DSL">DSL</option>
+      </select>
+    </div>
+  </div>
+  <div class="row" >
+    <div class="form-group" >
+      <div class="col-md-6" id="input-sitename">
+        <input name="sitename" id="sitename" type="url" class="form-control" id="" ng-model="model.site" placeholder="http://m.samsclub.com">
+      </div>
+      <div class="col-md-2">
+        <button style="width:100%" id="addbutton" class="btn btn-default" ng-click="addToList(model.site)" ng-disable="inputForm.$error.site">add</button>
+      </div>
+      <div class="col-md-2">
+        <button style="width:100%" type="button" class="btn btn-danger" ng-click="clearList()">Clear all!</button>
+      </div>
+      <div class="col-md-2">
+        <button style="width:100%" type="button" class="btn btn-info  btn-file" ngf-select ngf-change="upload($files)" ngf-multiple="multiple">Upload</button>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="websiteList" ng-init="fetchSitesToTest()">
+      <h2 ng-show="isFetchingData">Loading...</h2>
+      <table class="table table-bordered" ng-hide="isFetchingData">
+        <tbody ng-repeat="website in list track by $index">
+          <tr>
+            <td> {{$index + 1}}. </td>
+            <td>{{website}}
+              <button type="button" ng-click="removeFromList($index)" style="float:right;"class="btn btn-default"><span style="float: right; color: red;" class="glyphicon glyphicon-remove"></span></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <center><button id="addbutton" class="btn btn-info" ng-click="testSites(model.datePicker.startDate, model.datePicker.endDate, model.connection, model.browser)">Fetch Results</button></center>
+  </div>
+</div>

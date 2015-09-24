@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+
+var Axe = require('../controllers/axe.js'),
+	utils = require('../utils/utils.js');
+
+Axe.reRunFailedTests(utils.constants.API_KEY);

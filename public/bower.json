@@ -1,0 +1,32 @@
+{
+  "name": "dev-wpt-wrapper",
+  "version": "0.0.0",
+  "description": "WebPageTest wrapper app",
+  "main": "server.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "wpt",
+    "webpagetest",
+    "analytics"
+  ],
+  "authors": [
+    "Yohannes Seifu",
+    "Shivam Thapar",
+    "Harsha Yeddanapudy"
+  ],
+  "license": "MIT",
+  "homepage": "dev-wpt-wrapper.herokuapp.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-daterangepicker": "~0.1.16"
+  },
+  "directory" : "./public/bower_components"
+}

@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+
+var utils = require('../utils/utils.js'),
+	Axe = require('../controllers/axe.js');
+
+Axe.runTests(utils.constants.CONNECTION['3G'], utils.constants.BROWSER.CHROME, utils.constants.API_KEY);
+Axe.runTests(utils.constants.CONNECTION['3G'], utils.constants.BROWSER.IOS, utils.constants.API_KEY);
+
+Axe.runTests(utils.constants.CONNECTION.CABLE, utils.constants.BROWSER.CHROME, utils.constants.API_KEY);
+Axe.runTests(utils.constants.CONNECTION.CABLE, utils.constants.BROWSER.IOS, utils.constants.API_KEY);
+
+Axe.runTests(utils.constants.CONNECTION.DSL, utils.constants.BROWSER.CHROME, utils.constants.API_KEY);
+Axe.runTests(utils.constants.CONNECTION.DSL, utils.constants.BROWSER.IOS, utils.constants.API_KEY);

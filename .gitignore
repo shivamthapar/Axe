@@ -1,0 +1,7 @@
+.DS_Store
+*.csv
+/public/*.xls
+node_modules/*
+public/bower_components/*
+**/*.swp
+controllers/testInfo.js

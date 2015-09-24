@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+var Axe = require('../controllers/axe.js'),
+	config = require('../config.json');
+
+if(config.emailAddresses && config.maxPageSize)
+{
+	config.emailAddresses.forEach(function(email, i) {
+		Axe.tryNotifyingPageSize(email, config.maxPageSize);
+	});
+}

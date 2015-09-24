@@ -1,0 +1,328 @@
+<head>
+  <style type="text/css">
+    .container-fluid{
+      padding-top: 3%;
+      text-align: center;
+    }
+  </style>
+</head>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-6">
+			<center><b>Routes</b></center>
+		</div>
+		<div class="col-md-2">
+			<center><b>Dates</b></center>
+		</div>
+		<div class="col-md-2">
+			<center><b>Browser</b></center>
+		</div>
+		<div class="col-md-2">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6" ng-init="fetchSitesToTest()">
+			<select  class="form-control" ng-model="model.url" style="width:100%">
+				<option selected disabled>URL</option>
+				<option  ng-repeat="url in urls" value="{{url}}">{{url}}</option>
+			</select>
+		</div>
+		<div class="col-md-2" ng-init="getTestsStartingAndEndingDates()">
+	     <input ng-if="startDate != null" date-range-picker class="form-control date-picker" type="text" ng-model="model.datePicker" min="startDate" max="endDate"/>
+		</div>
+		<div class="col-md-2">
+			<select  class="form-control" ng-model="model.browserType" style="width:100%">
+				<option selected disabled>Browser</option>
+				<option value="chrome">Chrome - Desktop</option>
+				<option value="ios">iOS - Chrome with Mobile Emulation</option>
+			</select>
+		</div>
+		<div class="col-md-2">
+			<button  class="btn btn-default" ng-click="drawCharts(model.url, model.datePicker.startDate, model.datePicker.endDate, model.browserType)" style="width:100%">Draw charts !</button>
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-md-4" >
+      <h4 class = "title">Load Time on 3g</h4>
+      <div class = "stats" ng-show="isFetched('3G')">
+	        <table class="table table-bordered table-striped">
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">Average: </th>
+	            <td>First View: {{getAverage(data['3G'].LoadTime.firstView)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getAverage(data['3G'].LoadTime.secondView)}} seconds</td>
+	          </tr>
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">
+	            	<form name="gLoadTimeForm">
+		            	<input ng-init="gLoadTimePercentile = 95" type="number" style="width: 56px; display:inline;" maxlength="2" class="form-control" name="gLoadTimeInput" ng-model="gLoadTimePercentile"  ng-model-options="{ updateOn: 'blur' }" min="1" max="100"/>th Percentile: 
+		            </form>
+	            </th>
+	            <td>First View: {{getPercentile(data['3G'].LoadTime.firstView, gLoadTimePercentile/100)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getPercentile(data['3G'].LoadTime.secondView, gLoadTimePercentile/100)}} seconds</td>
+	          </tr>
+	        </table>
+	        <div ng-show="showError(gLoadTimeForm.gLoadTimeInput.$error)" class="alert alert-danger alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<strong>Warning!</strong> Please enter a number between 1 and 99.
+					</div>
+			</div>
+			<div id="LoadTime3g"></div>
+		</div>
+		<div class="col-md-4">
+			<h4 class = "title">Speed Index on 3g</h4>
+      <div class = "stats" ng-show="isFetched('3G')">
+	        <table class="table table-bordered table-striped">
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">Average: </th>
+	            <td>First View: {{getAverage(data['3G'].SpeedIndex.firstView)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getAverage(data['3G'].SpeedIndex.secondView)}} seconds</td>
+	          </tr>
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">
+	            	<form name="gSpeedIndexForm">
+		            	<input ng-init="gSpeedIndexPercentile = 95" type="number" style="width: 56px; display:inline;" maxlength="2" class="form-control" name="gSpeedIndexInput" ng-model="gSpeedIndexPercentile"  ng-model-options="{ updateOn: 'blur' }" min="1" max="100"/>th Percentile: 
+		            </form>
+	            </th>
+	            <td>First View: {{getPercentile(data['3G'].SpeedIndex.firstView, gSpeedIndexPercentile/100)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getPercentile(data['3G'].SpeedIndex.secondView, gSpeedIndexPercentile/100)}} seconds</td>
+	          </tr>
+	        </table>
+	        <div ng-show="showError(gSpeedIndexForm.gSpeedIndexInput.$error)" class="alert alert-danger alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<strong>Warning!</strong> Please enter a number between 1 and 99.
+					</div>
+			</div>
+			<div id="SpeedIndex3g"></div>
+		</div>
+		<div class="col-md-4">
+			<h4 class = "title">Start Render on 3g </h4>
+      <div class = "stats" ng-show="isFetched('3G')">
+	        <table class="table table-bordered table-striped">
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">Average: </th>
+	            <td>First View: {{getAverage(data['3G'].StartRender.firstView)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getAverage(data['3G'].StartRender.secondView)}} seconds</td>
+	          </tr>
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">
+	            	<form name="gStartRenderForm">
+		            	<input ng-init="gStartRenderPercentile = 95" type="number" style="width: 56px; display:inline;" maxlength="2" class="form-control" name="gStartRenderInput" ng-model="gStartRenderPercentile"  ng-model-options="{ updateOn: 'blur' }" min="1" max="100"/>th Percentile: 
+		            </form>
+	            </th>
+	            <td>First View: {{getPercentile(data['3G'].StartRender.firstView, gStartRenderPercentile/100)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getPercentile(data['3G'].StartRender.secondView, gStartRenderPercentile/100)}} seconds</td>
+	          </tr>
+	        </table>
+	        <div ng-show="showError(gStartRenderForm.gStartRenderInput.$error)" class="alert alert-danger alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<strong>Warning!</strong> Please enter a number between 1 and 99.
+					</div>
+			</div>
+			<div id="StartRender3g"></div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+      <h4 class = "title">Load Time on cable</h4>
+      <div class = "stats" ng-show="isFetched('cable')">
+	        <table class="table table-bordered table-striped">
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">Average: </th>
+	            <td>First View: {{getAverage(data['cable'].LoadTime.firstView)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getAverage(data['cable'].LoadTime.secondView)}} seconds</td>
+	          </tr>
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">
+	            	<form name="cableLoadTimeForm">
+		            	<input ng-init="cableLoadTimePercentile = 95" type="number" style="width: 56px; display:inline;" maxlength="2" class="form-control" name="cableLoadTimeInput" ng-model="cableLoadTimePercentile"  ng-model-options="{ updateOn: 'blur' }" min="1" max="100"/>th Percentile: 
+		            </form>
+	            </th>
+	            <td>First View: {{getPercentile(data['cable'].LoadTime.firstView, cableLoadTimePercentile/100)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getPercentile(data['cable'].LoadTime.secondView, cableLoadTimePercentile/100)}} seconds</td>
+	          </tr>
+	        </table>
+	        <div ng-show="showError(cableLoadTimeForm.cableLoadTimeInput.$error)" class="alert alert-danger alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<strong>Warning!</strong> Please enter a number between 1 and 99.
+					</div>
+			</div>
+			<div id="cableLoadTime"></div>
+		</div>
+		<div class="col-md-4">
+			<h4 class = "title">Speed Index on cable</h4>
+      <div class = "stats" ng-show="isFetched('cable')">
+	        <table class="table table-bordered table-striped">
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">Average: </th>
+	            <td>First View: {{getAverage(data['cable'].SpeedIndex.firstView)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getAverage(data['cable'].SpeedIndex.secondView)}} seconds</td>
+	          </tr>
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">
+	            	<form name="cableSpeedIndexForm">
+		            	<input ng-init="cableSpeedIndexPercentile = 95" type="number" style="width: 56px; display:inline;" maxlength="2" class="form-control" name="cableSpeedIndexInput" ng-model="cableSpeedIndexPercentile" ng-model-options="{ updateOn: 'blur' }" min="1" max="100"/>th Percentile: 
+		            </form>
+	            </th>
+	            <td>First View: {{getPercentile(data['cable'].SpeedIndex.firstView, cableSpeedIndexPercentile/100)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getPercentile(data['cable'].SpeedIndex.secondView, cableSpeedIndexPercentile/100)}} seconds</td>
+	          </tr>
+	        </table>
+	        <div ng-show="showError(cableSpeedIndexForm.cableSpeedIndexInput.$error)" class="alert alert-danger alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<strong>Warning!</strong> Please enter a number between 1 and 99.
+					</div>
+			</div>
+			<div id="cableSpeedIndex"></div>
+		</div>
+		<div class="col-md-4">
+			<h4 class = "title">Start Render on cable </h4>
+      <div class = "stats" ng-show="isFetched('cable')">
+	        <table class="table table-bordered table-striped">
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">Average: </th>
+	            <td>First View: {{getAverage(data['cable'].StartRender.firstView)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getAverage(data['cable'].StartRender.secondView)}} seconds</td>
+	          </tr>
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">
+	            	<form name="cableStartRenderForm">
+		            	<input ng-init="cableStartRenderPercentile = 95" type="number" style="width: 56px; display:inline;" maxlength="2" class="form-control" name="cableStartRenderInput" ng-model="cableStartRenderPercentile"  ng-model-options="{ updateOn: 'blur' }" min="1" max="100"/>th Percentile: 
+		            </form>
+	            </th>
+	            <td>First View: {{getPercentile(data['cable'].StartRender.firstView, cableStartRenderPercentile/100)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getPercentile(data['cable'].StartRender.secondView, cableStartRenderPercentile/100)}} seconds</td>
+	          </tr>
+	        </table>
+	        <div ng-show="showError(cableStartRenderForm.cableStartRenderInput.$error)" class="alert alert-danger alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<strong>Warning!</strong> Please enter a number between 1 and 99.
+					</div>
+			</div>
+			<div id="cableStartRender"></div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<h4 class = "title">Load Time on DSL </h4>
+      <div class = "stats" ng-show="isFetched('DSL')">
+	        <table class="table table-bordered table-striped">
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">Average: </th>
+	            <td>First View: {{getAverage(data['DSL'].LoadTime.firstView)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getAverage(data['DSL'].LoadTime.secondView)}} seconds</td>
+	          </tr>
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">
+	            	<form name="dslLoadTimeForm">
+		            	<input ng-init="dslLoadTimePercentile = 95" type="number" style="width: 56px; display:inline;" maxlength="2" class="form-control" name="dslLoadTimeInput" ng-model="dslLoadTimePercentile"  ng-model-options="{ updateOn: 'blur' }" min="1" max="100"/>th Percentile: 
+		            </form>
+	            </th>
+	            <td>First View: {{getPercentile(data['DSL'].LoadTime.firstView, dslLoadTimePercentile/100)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getPercentile(data['DSL'].LoadTime.secondView, dslLoadTimePercentile/100)}} seconds</td>
+	          </tr>
+	        </table>
+	        <div ng-show="showError(dslLoadTimeForm.dslLoadTimeInput.$error)" class="alert alert-danger alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<strong>Warning!</strong> Please enter a number between 1 and 99.
+					</div>
+			</div>
+			<div id="dslLoadTime"></div>
+		</div>
+		<div class="col-md-4">
+			<h4 class = "title">Speed Index on DSL</h4>
+      <div class = "stats" ng-show="isFetched('DSL')">
+	        <table class="table table-bordered table-striped">
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">Average: </th>
+	            <td>First View: {{getAverage(data['DSL'].SpeedIndex.firstView)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getAverage(data['DSL'].SpeedIndex.secondView)}} seconds</td>
+	          </tr>
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">
+	            	<form name="dslSpeedIndexForm">
+		            	<input ng-init="dslSpeedIndexPercentile = 95" type="number" style="width: 56px; display:inline;" maxlength="2" class="form-control" name="dslSpeedIndexInput" ng-model="dslSpeedIndexPercentile"  ng-model-options="{ updateOn: 'blur' }" min="1" max="100"/>th Percentile: 
+		            </form>
+	            </th>
+	            <td>First View: {{getPercentile(data['DSL'].SpeedIndex.firstView, dslSpeedIndexPercentile/100)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getPercentile(data['DSL'].SpeedIndex.secondView, dslSpeedIndexPercentile/100)}} seconds</td>
+	          </tr>
+	        </table>
+	        <div ng-show="showError(dslSpeedIndexForm.dslSpeedIndexInput.$error)" class="alert alert-danger alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<strong>Warning!</strong> Please enter a number between 1 and 99.
+					</div>
+			</div>
+			<div id="dslSpeedIndex"></div>
+		</div>
+		<div class="col-md-4">
+			<h4 class = "title">Start Render on DSL </h4>
+      <div class = "stats" ng-show="isFetched('DSL')">
+	        <table class="table table-bordered table-striped">
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">Average: </th>
+	            <td>First View: {{getAverage(data['DSL'].StartRender.firstView)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getAverage(data['DSL'].StartRender.secondView)}} seconds</td>
+	          </tr>
+	          <tr>
+	            <th rowspan="2" style="vertical-align:middle">
+	            	<form name="dslStartRenderForm">
+		            	<input ng-init="dslStartRenderPercentile = 95" type="number" style="width: 56px; display:inline;" maxlength="2" class="form-control" name="dslStartRenderInput" ng-model="dslStartRenderPercentile"  ng-model-options="{ updateOn: 'blur' }" min="1" max="100"/>th Percentile: 
+		            </form>
+	            </th>
+	            <td>First View: {{getPercentile(data['DSL'].StartRender.firstView, dslStartRenderPercentile/100)}} seconds</td>
+	          </tr>
+	          <tr class="success">
+	            <td>Second View: {{getPercentile(data['DSL'].StartRender.secondView, dslStartRenderPercentile/100)}} seconds</td>
+	          </tr>
+	        </table>
+	        <div ng-show="showError(dslStartRenderForm.dslStartRenderInput.$error)" class="alert alert-danger alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<strong>Warning!</strong> Please enter a number between 1 and 99.
+					</div>
+			</div>
+			<div id="dslStartRender"></div>
+		</div>
+	</div>
+</div>
+<div class="well well-sm">
+  <h4>About the stats</h4>
+  <p>The <b>Load Time</b> is measured as the time from the start of the initial navigation until the beginning of the window load event (onload).</p>
+  <p>The <b>Start Render</b> time is measured as the time from the start of the initial navigation until the first non-white content is painted to the browser display.</p>
+  <p>The <b>Speed Index</b> is a calculated metric that represents how quickly the page rendered the user-visible content (lower is better).  More information on how it is calculated is available here: <a href="https://sites.google.com/a/webpagetest.org/docs/using-webpagetest/metrics/speed-index">Speed Index</a></p>
+</div>
